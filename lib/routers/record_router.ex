@@ -11,6 +11,21 @@ defmodule Friends.Router.RecordRouter do
 
   plug :dispatch
 
+  post "/create" do
+    params = conn.body_params
+
+    # Build person
+    person = %Friends.Person{
+      first_name: params["fname"],
+      last_name: params["lname"],
+      age: params["age"]
+    }
+
+    # Insert and send response
+    {:ok, inserted_person} = Friends.Person.insert(person)
+    send_resp(conn, 200, "OK, ID: #{inserted_person.id}")
+  end
+
   get "/" do
     person = Friends.Person
     |> Friends.Repo.all
